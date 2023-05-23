@@ -1,6 +1,7 @@
 import axios from "axios";
-import {useReducer, useState} from "react";
+import {useEffect, useReducer, useState} from "react";
 import countryCode from "../Features/Checkout/Data/countryCode.json";
+import {apis} from "../apis/axios";
 
 const useGlobal = () => {
     const [open, setOpen] = useState(false);
@@ -19,6 +20,14 @@ const useGlobal = () => {
         products: [],
         carts: []
     })
+
+    useEffect(()=>{
+        apis.get("/api/auth/verify").then(({status, data})=>{
+            if(status === 201){
+                setAuth(data)
+            }
+        }).catch(ex=>{})
+    }, [])
 
 
     const toggleModal = () => setOpen(!open);
