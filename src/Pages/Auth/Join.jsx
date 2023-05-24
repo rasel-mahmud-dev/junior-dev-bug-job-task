@@ -4,7 +4,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import Registration from "../../Components/Registration";
 import Login from "../../Components/Login";
 import {useGlobalCtx} from "../../Contexts/GlobalProvider";
-import axios from "axios";
 import {apis} from "../../apis/axios";
 import {toast} from "react-toastify";
 import errorMessage from "../../Utils/errorMessage";
@@ -12,7 +11,7 @@ import errorMessage from "../../Utils/errorMessage";
 const Join = () => {
 
 
-    const {setAuth} = useGlobalCtx()
+    const {handleLogin} = useGlobalCtx()
 
     const {register, handleSubmit, formState, setValue} = useForm({
         defaultValues: {
@@ -50,7 +49,7 @@ const Join = () => {
             let {status, data} = await apis.post("/api/auth" + url,  payload)
             if (status === 201) {
                 localStorage.setItem("token", data.token)
-                setAuth(data.auth)
+                handleLogin(data.auth)
 
                 // after successfully login or registration redirect to homepage
                 navigate("/")

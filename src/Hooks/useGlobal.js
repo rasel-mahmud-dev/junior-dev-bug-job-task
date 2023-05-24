@@ -4,18 +4,19 @@ import countryCode from "../Features/Checkout/Data/countryCode.json";
 import {apis} from "../apis/axios";
 import errorMessage from "../Utils/errorMessage";
 import {toast} from "react-toastify";
-import {useLocation} from "react-router-dom";
 
 const useGlobal = () => {
     const [open, setOpen] = useState(false);
     const [mbCode, setMbCode] = useState(countryCode[15]);
     const [totalPrice, setTotalPrice] = useState(0);
-    const [paymentErrorMessage, setPaymentErrorMessage]  = useState("")
+    const [paymentErrorMessage, setPaymentErrorMessage] = useState("")
 
 
-    const [auth, setAuth] = useState()
+    const [auth, setAuth] = useState(null)
+    const [isAuthLoaded, setAuthLoaded] = useState(false)
 
-    const [productState, setProductState] = useReducer(function (state, action){
+
+    const [productState, setProductState] = useReducer(function (state, action) {
         return {
             ...state,
             ...action,
@@ -25,21 +26,31 @@ const useGlobal = () => {
         carts: []
     })
 
-    useEffect(()=>{
-        apis.get("/api/auth/verify").then(({status, data})=>{
-            if(status === 201){
-                setAuth(data)
+    // auth load
+    useEffect(() => {
+        apis.get("/api/auth/verify").then(({status, data}) => {
+            if (status === 201) {
+                handleLogin(data)
+            } else {
+                handleLogin(null)
             }
-        }).catch(ex=>{})
+        }).catch(ex => {
+            handleLogin(null)
+        })
     }, [])
 
+
+    function handleLogin(auth) {
+        setAuth(auth)
+        setAuthLoaded(true)
+    }
 
     const toggleModal = () => setOpen(!open);
 
     const getPayment = async (body, pathname) => {
 
 
-        if(!auth) return toast.error("To create order and payment you need to login")
+        if (!auth) return toast.error("To create order and payment you need to login")
 
         // clear error message when press payment button
         setPaymentErrorMessage("")
@@ -50,18 +61,17 @@ const useGlobal = () => {
                 totalPrice
             });
 
-            if(status !== 200) return setPaymentErrorMessage("Payment fail, Please try again.")
+            if (status !== 200) return setPaymentErrorMessage("Payment fail, Please try again.")
 
 
             // if successfully create payment agreement then redirect server to create agreement Execute
             let agreementExecuteLink = `${process.env.REACT_APP_SERVER_URL}/api/bkash/execute?email=${body.email}&totalPrice=${totalPrice}&paymentID=${data.paymentID}`
 
-            let clientRedirect = '&clientRedirect='+pathname
+            let clientRedirect = '&clientRedirect=' + pathname
             agreementExecuteLink += clientRedirect;
 
             // hit backend server to Execute Agreement.
             window.location.href = agreementExecuteLink
-
 
 
         } catch (ex) {
@@ -78,7 +88,8 @@ const useGlobal = () => {
         setMbCode,
         mbCode,
         auth,
-        setAuth,
+        isAuthLoaded,
+        handleLogin,
         productState,
         setProductState,
         getPayment,
