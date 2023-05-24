@@ -17,9 +17,12 @@ const AuthDropdown = ({onMouseLeave, auth}) => {
                 <h5 className="text-sm">{auth.email}</h5>
             </div>
             <li className="hover:text-blue-500 list-none cursor-pointer"><Link to="/">Home</Link></li>
-            <li className="hover:text-blue-500 list-none cursor-pointer">Profile</li>
+
             <Link to="/orders">
                 <li className="hover:text-blue-500 list-none cursor-pointer">Orders</li>
+            </Link>
+            <Link to="/transactions">
+                <li className="hover:text-blue-500 list-none cursor-pointer">Transactions</li>
             </Link>
             <li className="hover:text-blue-500 list-none cursor-pointer" onClick={handleLogout}>Logout</li>
         </div>

@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+table{
+
+}
+
+table tbody tr:nth-child(odd){
+    background: #f6f6f6;
+}
+
+
+table tr td{
+    padding: 16px 10px;
+
+}

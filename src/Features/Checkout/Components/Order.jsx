@@ -114,8 +114,20 @@ export default function Order() {
                     <p className="font-bold text-xl text-textHeader">৳ {totalPrice} TK </p>
                 </div>
                 <Btn type="submit">Continue to Payment</Btn>
-                {open ? <PaymentMd/> : ""}
+
             </div>
+
+            <div className="mt-6">
+                <p className="text-base font-semibold text-neutral-800">Bkash test credential</p>
+
+                <div className="text-sm text-neutral-700">
+                    <p><span className="w-24 inline-block">Phone</span>: 01770618575 </p>
+                    <p><span className="w-24 inline-block">OTP code</span>: 123456</p>
+                    <p><span className="w-24 inline-block">PIN</span>: 12121</p>
+                </div>
+
+            </div>
+
         </div>
     )
 }

@@ -1,12 +1,13 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form';
 import {useGlobalCtx} from '../../../Contexts/GlobalProvider';
 import Contact from './Contact'
 import Order from './Order'
-import {useLocation} from "react-router-dom";
+import {useLocation, useParams, useSearchParams} from "react-router-dom";
 import {toast} from "react-toastify";
 import {apis} from "../../../apis/axios";
 import errorMessage from "../../../Utils/errorMessage";
+import PaymentMd from "../../../Components/Modal/PaymentMd";
 
 
 function Checkout() {
@@ -16,7 +17,34 @@ function Checkout() {
             firstName: "Test user"
         }
     });
+
+    const [useGetParams] = useSearchParams()
+
+    const [orderDetail, setOrderDetail] = useState(null)
+
+
+
     const {productState, totalPrice, auth, setPaymentErrorMessage, paymentErrorMessage} = useGlobalCtx();
+
+    const transactionId = useGetParams.get("transactionId")
+
+
+    useEffect(()=>{
+
+    // clear previous error message during payment
+        setPaymentErrorMessage("")
+
+        if(transactionId && auth){
+            apis.get("/api/transactions/"+transactionId).then(({status, data})=>{
+                if(status === 200 && data.status === "ok"){
+                    setOrderDetail(data.data)
+                }
+            })
+        }
+
+    }, [transactionId, auth])
+
+
 
     const location = useLocation()
 
@@ -35,31 +63,20 @@ function Checkout() {
                     ...userInput,
                     totalPrice,
                     items: productState.productsForOrder,
-                    redirectClient: location.pathname
+                    clientRedirect: location.pathname
                 });
 
                 if (status !== 201) return setPaymentErrorMessage("Payment fail, Please try again.")
 
                 window.location.href = data.bkashURL
 
-                // if successfully create payment agreement then redirect server to create agreement Execute
-                // let agreementExecuteLink = `${process.env.REACT_APP_SERVER_URL}/api/bkash/execute?email=${body.email}&totalPrice=${totalPrice}&paymentID=${data.paymentID}`
-                //
-                // let clientRedirect = '&clientRedirect=' + pathname
-                // agreementExecuteLink += clientRedirect;
-
-                // hit backend server to Execute Agreement.
-                // window.location.href = agreementExecuteLink
-
-
             } catch (ex) {
 
                 // handle show error message to client to better user experience.
                 setPaymentErrorMessage(errorMessage(ex))
             }
-
-
     };
+
 
 
     return (
@@ -71,6 +88,10 @@ function Checkout() {
                     <p className="text-red-500 font-medium text-sm text-center">{paymentErrorMessage}</p>
                 </div>
             )}
+
+
+            {/**** Payment create successful open modal */}
+            {orderDetail ? <PaymentMd closeInfoModal={()=>setOrderDetail(null)} orderDetail={orderDetail}/> : ""}
 
             <div className="grid grid-cols-12 gap-x-8 pb-12 pt-4">
 
