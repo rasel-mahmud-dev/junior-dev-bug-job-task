@@ -13,8 +13,8 @@ const Product = ({product, onAddToCart, onBuyNow}) => {
                     <h4 className="text-primary font-semibold">Taka {product.price}</h4>
 
                     <div className="flex mt-4 gap-x-4">
-                        <Btn onClick={()=>onAddToCart(product._id)}>Add To Cart</Btn>
-                        <Btn  onClick={()=>onBuyNow(product)} className="!p-2 !bg-header text-white">Buy Now</Btn>
+                        <Btn  className="!py-3 !text-xs" onClick={()=>onAddToCart(product._id)}>Add To Cart</Btn>
+                        <Btn  onClick={()=>onBuyNow(product)} className="!py-3 !text-xs  !bg-header text-white">Buy Now</Btn>
                     </div>
                 </div>
 

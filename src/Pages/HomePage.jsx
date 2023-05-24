@@ -5,7 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Product from "../Components/Product";
 import {toast} from "react-toastify";
 import errorMessage from "../Utils/errorMessage";
-import {MoonLoader} from "react-spinners";
+
 import Loader from "../Components/Loader";
 
 const HomePage = () => {
@@ -23,7 +23,6 @@ const HomePage = () => {
             }
         })
     }, [])
-
 
     function handleAddToCart(productId) {
         if (!auth) return toast.error("To add to cart product, you need to login")

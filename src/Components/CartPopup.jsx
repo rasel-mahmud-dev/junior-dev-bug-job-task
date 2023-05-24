@@ -68,8 +68,8 @@ const CartPopup = ({setOpenCart, carts = [], setProductState}) => {
                         <td>{cart.quantity || 1} Pics</td>
                         <td>
                             <div className="flex items-center gap-x-2">
-                                <Btn onClick={()=>handleBuyNow(cart)}>Buy Now</Btn>
-                                <Btn onClick={()=>handleDelete(cart)}>Delete</Btn>
+                                <Btn  className="text-xs px-4" onClick={()=>handleBuyNow(cart)}>Buy Now</Btn>
+                                <Btn  className="text-xs px-4" onClick={()=>handleDelete(cart)}>Delete</Btn>
                             </div>
                         </td>
                     </tr>
