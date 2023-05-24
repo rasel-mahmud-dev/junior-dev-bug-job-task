@@ -10,7 +10,7 @@ const AuthDropdown = ({onMouseLeave}) => {
         setAuth(null)
     }
     return (
-        <div className="absolute w-40 shadow-xl right-0 top-9 bg-white p-4 rounded-xl" onMouseLeave={onMouseLeave} >
+        <div className="absolute w-40 shadow-xl right-0 top-9 bg-white p-4 rounded-xl"  onMouseLeave={onMouseLeave} >
             <li className="hover:text-blue-500 list-none cursor-pointer"><Link to="/">Home</Link></li>
             <li className="hover:text-blue-500 list-none cursor-pointer">Profile</li>
             <li className="hover:text-blue-500 list-none cursor-pointer" onClick={handleLogout}>Logout</li>

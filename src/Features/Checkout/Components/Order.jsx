@@ -7,35 +7,40 @@ import {useParams} from "react-router-dom";
 import {apis} from "../../../apis/axios";
 
 
-
 export default function Order() {
-    const {open, productState: {carts = []}} = useGlobalCtx();
+    const {open, totalPrice, setTotalPrice, productState: {carts = []}} = useGlobalCtx();
 
     const [singleProduct, setSingleProduct] = useState(null)
 
-    const [totalPrice, setTotalPrice] = useState(0)
+    const [subTotalPrice, setSubTotalPrice] = useState(0)
 
     const {productId} = useParams()
 
 
     useEffect(() => {
 
+        // buying process for single product which is not listed on the cart
         if (productId) {
             apis.get("/api/products/" + productId).then(({status, data}) => {
                 if (status === 200) {
-                    setTotalPrice(data.price)
+                    setSubTotalPrice(data.price)
                     setSingleProduct(data)
                 }
             })
         } else {
+            // all cart product
             let total = carts.reduce(
                 (accumulator, currentValue) => Number(accumulator) + Number(currentValue.price),
                 0
             );
-            setTotalPrice(total)
+            setSubTotalPrice(total)
         }
 
-    }, [productId])
+    }, [productId, carts])
+
+    useEffect(() => {
+        setTotalPrice(subTotalPrice + 1)
+    }, [subTotalPrice]);
 
 
     return (
@@ -53,13 +58,14 @@ export default function Order() {
                         singleProduct && (
                             <> <TbRow key={singleProduct._id}
                                       label={singleProduct.title}>৳ {singleProduct.price} TK </TbRow>
-                                <TbRow label="Subtotal"><p className="text-black">৳ {totalPrice}TK </p></TbRow></>
+                                <TbRow label="Subtotal"><p className="text-black">৳ {singleProduct.price}TK </p>
+                                </TbRow></>
                         )
                     ) : (
                         <>
                             {carts.map((product) => <TbRow key={product._id}
                                                            label={product.title}>৳ {product.price} TK </TbRow>)}
-                            <TbRow label="Subtotal"><p className="text-black">৳ {totalPrice}TK </p></TbRow>
+                            <TbRow label="Subtotal"><p className="text-black">৳ {subTotalPrice}TK </p></TbRow>
                         </>
                     )}
 

@@ -4,12 +4,14 @@ import countryCode from "../Features/Checkout/Data/countryCode.json";
 import {apis} from "../apis/axios";
 import errorMessage from "../Utils/errorMessage";
 import {toast} from "react-toastify";
+import {useLocation} from "react-router-dom";
 
 const useGlobal = () => {
     const [open, setOpen] = useState(false);
     const [mbCode, setMbCode] = useState(countryCode[15]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [paymentErrorMessage, setPaymentErrorMessage]  = useState("")
+
 
     const [auth, setAuth] = useState()
 
@@ -34,7 +36,8 @@ const useGlobal = () => {
 
     const toggleModal = () => setOpen(!open);
 
-    const getPayment = async (body) => {
+    const getPayment = async (body, pathname) => {
+
 
         if(!auth) return toast.error("To create order and payment you need to login")
 
@@ -49,9 +52,17 @@ const useGlobal = () => {
 
             if(status !== 200) return setPaymentErrorMessage("Payment fail, Please try again.")
 
+
             // if successfully create payment agreement then redirect server to create agreement Execute
-            const agreementExecuteLink = `${process.env.REACT_APP_SERVER_URL}/api/bkash/execute?email=${body.email}&totalPrice=${body.totalPrice}&paymentID=${data.paymentID}`
+            let agreementExecuteLink = `${process.env.REACT_APP_SERVER_URL}/api/bkash/execute?email=${body.email}&totalPrice=${totalPrice}&paymentID=${data.paymentID}`
+
+            let clientRedirect = '&clientRedirect='+pathname
+            agreementExecuteLink += clientRedirect;
+
+            // hit backend server to Execute Agreement.
             window.location.href = agreementExecuteLink
+
+
 
         } catch (ex) {
 

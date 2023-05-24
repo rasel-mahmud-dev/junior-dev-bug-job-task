@@ -35,7 +35,7 @@ export default function Header() {
 
 
     return (
-        <div className="bg-header h-12">
+        <div className="bg-header h-12" >
             <nav className="rounded-md ml-auto mr-auto container h-full">
                 <ol className="list-reset flex h-full items-center text-sm font-normal">
                     {breadcrumbsData.map((item, index) => (

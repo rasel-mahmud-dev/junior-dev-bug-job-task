@@ -41,7 +41,7 @@ export default function TopHeader() {
 
 
     return (
-        <div className="flex justify-between items-center py-5 space-x-8 relative">
+        <div className="flex justify-between items-center py-5 space-x-8 relative" style={{zIndex: 10}}>
 
 
             { isOpenCart && <CartPopup   setProductState={setProductState} carts={carts} setOpenCart={setOpenCart} /> }

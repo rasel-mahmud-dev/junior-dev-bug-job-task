@@ -3,15 +3,17 @@ import {useForm} from 'react-hook-form';
 import {useGlobalCtx} from '../../../Contexts/GlobalProvider';
 import Contact from './Contact'
 import Order from './Order'
+import {useLocation} from "react-router-dom";
 
 
 function Checkout() {
     const {register, handleSubmit} = useForm();
     const {getPayment, paymentErrorMessage} = useGlobalCtx();
 
+    const location = useLocation()
 
 
-    const onSubmit = (data) => getPayment(data);
+    const onSubmit = (data) => getPayment(data, location.pathname);
 
 
     return (
