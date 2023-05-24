@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {apis} from "../apis/axios";
 import {useGlobalCtx} from "../Contexts/GlobalProvider";
+import Loader from "../Components/Loader";
 
 
 const Transaction = () => {
@@ -15,13 +16,16 @@ const Transaction = () => {
     } = useGlobalCtx()
 
     const [transactions, setTransaction] = useState([])
-
+    const [tnxFetchLoading, setTnxFetchLoading] = useState(false)
     useEffect(() => {
         if (auth) {
+            setTnxFetchLoading(true)
             apis.get("/api/transactions").then(({data, status}) => {
                 if (status === 200 && data?.status === "ok") {
                     setTransaction(data.items || [])
                 }
+            }).finally(()=>{
+                setTnxFetchLoading(false)
             })
         }
     }, [auth]);
@@ -46,7 +50,7 @@ const Transaction = () => {
                     </thead>
                     <tbody>
 
-                    {transactions?.length === 0 && (
+                    {!tnxFetchLoading && transactions?.length === 0 && (
                         <div className="">
                             <h4 className="text-sm font-medium ">No Transaction found</h4>
                         </div>
@@ -67,6 +71,14 @@ const Transaction = () => {
                     ))}
                     </tbody>
                 </table>
+
+                { tnxFetchLoading && (
+                    <div className={"pt-20"}>
+                        <Loader title="Transaction fetching..." />
+                    </div>
+                )}
+
+
             </div>
         </div>
     );

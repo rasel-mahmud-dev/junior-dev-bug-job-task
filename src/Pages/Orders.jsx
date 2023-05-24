@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {apis} from "../apis/axios";
 import {useGlobalCtx} from "../Contexts/GlobalProvider";
+import Loader from "../Components/Loader";
 
 
 const Orders = () => {
@@ -15,13 +16,17 @@ const Orders = () => {
     } = useGlobalCtx()
 
     const [orders, setOrders] = useState([])
+    const [orderFetchLoading, setOrderFetchLoading] = useState(false)
 
     useEffect(() => {
         if (auth) {
+            setOrderFetchLoading(true)
             apis.get("/api/orders").then(({data, status}) => {
                 if (status === 200 && data?.status === "ok") {
                     setOrders(data.items || [])
                 }
+            }).finally(()=>{
+                setOrderFetchLoading(false)
             })
         }
     }, [auth]);
@@ -33,6 +38,7 @@ const Orders = () => {
             <h1 className="text-2xl font-bold ">Orders </h1>
 
             <div className="pb-20">
+
 
                 <table className="w-full mt-4  ">
                     <thead>
@@ -47,11 +53,12 @@ const Orders = () => {
                     </thead>
                     <tbody>
 
-                    {orders?.length === 0 && (
+                    {!orderFetchLoading && orders?.length === 0 && (
                         <div className="">
                             <h4 className="text-sm font-medium ">No Order created yet</h4>
                         </div>
                     )}
+
 
                     {orders?.map((order) => (
                         <tr key={order._id}>
@@ -74,6 +81,14 @@ const Orders = () => {
                     ))}
                     </tbody>
                 </table>
+
+
+                { orderFetchLoading && (
+                    <div className={"pt-20"}>
+                        <Loader title="Orders fetching..." />
+                    </div>
+                )}
+
             </div>
         </div>
     );

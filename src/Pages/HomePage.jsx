@@ -6,6 +6,7 @@ import Product from "../Components/Product";
 import {toast} from "react-toastify";
 import errorMessage from "../Utils/errorMessage";
 import {MoonLoader} from "react-spinners";
+import Loader from "../Components/Loader";
 
 const HomePage = () => {
 
@@ -77,11 +78,8 @@ const HomePage = () => {
             </div>
 
             {productState?.products && productState?.products.length === 0 && (
-                <div>
-                    <div className="pb-40 w-full flex justify-center  items-center flex-col">
-                        <MoonLoader/>
-                        <h4 className="text-sm font-semibold mt-2">Product Loading...</h4>
-                    </div>
+                <div className={"pb-40"}>
+                    <Loader title="Proudct Loading..." />
                 </div>
             )}
 

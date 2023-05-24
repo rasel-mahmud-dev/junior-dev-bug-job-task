@@ -62,3 +62,12 @@
 #### Checkout page
 ![2023-05-24_151223.png](public%2F2023-05-24_151223.png)
 
+
+
+#### Payment page
+![2023-05-24_151223.png](public/2023-05-24_205258.png)
+
+
+#### Confirm Modal
+![2023-05-24_151223.png](public/2023-05-24_210306.png)
+

@@ -18,7 +18,7 @@ function Checkout() {
         }
     });
 
-    const [useGetParams] = useSearchParams()
+    const [useGetParams, setSearchParams] = useSearchParams()
 
     const [orderDetail, setOrderDetail] = useState(null)
 
@@ -27,6 +27,7 @@ function Checkout() {
     const {productState, totalPrice, auth, setPaymentErrorMessage, paymentErrorMessage} = useGlobalCtx();
 
     const transactionId = useGetParams.get("transactionId")
+    const errorMessage = useGetParams.get("errorMessage")
 
 
     useEffect(()=>{
@@ -40,6 +41,12 @@ function Checkout() {
                     setOrderDetail(data.data)
                 }
             })
+        }
+
+        if(errorMessage){
+            setPaymentErrorMessage("Payment fail, Please try again")
+            setOrderDetail(null)
+            setSearchParams("errorMessage", "")
         }
 
     }, [transactionId, auth])
