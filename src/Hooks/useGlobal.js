@@ -2,6 +2,8 @@ import axios from "axios";
 import {useEffect, useReducer, useState} from "react";
 import countryCode from "../Features/Checkout/Data/countryCode.json";
 import {apis} from "../apis/axios";
+import errorMessage from "../Utils/errorMessage";
+import {toast} from "react-toastify";
 
 const useGlobal = () => {
     const [open, setOpen] = useState(false);
@@ -34,6 +36,8 @@ const useGlobal = () => {
 
     const getPayment = async (body) => {
 
+        if(!auth) return toast.error("To create order and payment you need to login")
+
         // clear error message when press payment button
         setPaymentErrorMessage("")
 
@@ -52,11 +56,7 @@ const useGlobal = () => {
         } catch (ex) {
 
             // handle show error message to client to better user experience.
-            let errorMessage = ex.message;
-            if(ex?.response && ex.response?.data && typeof ex.response.data === "string"){
-                errorMessage = ex.response.data;
-            }
-            setPaymentErrorMessage(errorMessage)
+            setPaymentErrorMessage(errorMessage(ex))
         }
     }
 

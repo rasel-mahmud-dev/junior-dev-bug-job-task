@@ -4,9 +4,12 @@ import {useGlobalCtx} from '../../../Contexts/GlobalProvider';
 import Contact from './Contact'
 import Order from './Order'
 
+
 function Checkout() {
     const {register, handleSubmit} = useForm();
     const {getPayment, paymentErrorMessage} = useGlobalCtx();
+
+
 
     const onSubmit = (data) => getPayment(data);
 

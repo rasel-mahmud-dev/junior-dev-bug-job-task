@@ -1,24 +1,43 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import PaymentMd from '../../../Components/Modal/PaymentMd';
 import Btn from '../../../Components/Share/Btn'
 import {useGlobalCtx} from '../../../Contexts/GlobalProvider';
 import {TbRow} from './Handler'
+import {useParams} from "react-router-dom";
+import {apis} from "../../../apis/axios";
 
-const CartProducts = [{id: 1, product: 'External SSD USB 3.1 750 GB', price: '1'}, {
-    id: 2,
-    product: 'External SSD USB 2.1 150 GB',
-    price: '1'
-}];
+
+
 export default function Order() {
-    const {open, setTotalPrice, totalPrice} = useGlobalCtx();
+    const {open, productState: {carts = []}} = useGlobalCtx();
 
-    const total = CartProducts.reduce(
-        (accumulator, currentValue) => Number(accumulator) + Number(currentValue.price),
-        0
-    );
+    const [singleProduct, setSingleProduct] = useState(null)
+
+    const [totalPrice, setTotalPrice] = useState(0)
+
+    const {productId} = useParams()
+
+
     useEffect(() => {
-        setTotalPrice(total + 1);
-    }, []);
+
+        if (productId) {
+            apis.get("/api/products/" + productId).then(({status, data}) => {
+                if (status === 200) {
+                    setTotalPrice(data.price)
+                    setSingleProduct(data)
+                }
+            })
+        } else {
+            let total = carts.reduce(
+                (accumulator, currentValue) => Number(accumulator) + Number(currentValue.price),
+                0
+            );
+            setTotalPrice(total)
+        }
+
+    }, [productId])
+
+
     return (
         <div>
             <div className="border border-border border-opacity-5 rounded-[0.5rem] py-4 px-5">
@@ -29,10 +48,25 @@ export default function Order() {
                         <td className="pt-5 pb-2 text-base font-semibold text-black">Product</td>
                         <td className="pt-5 pb-2 text-base font-semibold text-black text-right">Subtotal</td>
                     </tr>
-                    {CartProducts.map((product) => <TbRow key={product.id}
-                                                          label={product.product}>৳ {product.price} TK </TbRow>)}
-                    <TbRow label="Subtotal"><p className="text-black">৳ {total}TK </p></TbRow>
+
+                    {productId ? (
+                        singleProduct && (
+                            <> <TbRow key={singleProduct._id}
+                                      label={singleProduct.title}>৳ {singleProduct.price} TK </TbRow>
+                                <TbRow label="Subtotal"><p className="text-black">৳ {totalPrice}TK </p></TbRow></>
+                        )
+                    ) : (
+                        <>
+                            {carts.map((product) => <TbRow key={product._id}
+                                                           label={product.title}>৳ {product.price} TK </TbRow>)}
+                            <TbRow label="Subtotal"><p className="text-black">৳ {totalPrice}TK </p></TbRow>
+                        </>
+                    )}
+
+
                     </tbody>
+
+
                 </table>
                 <p className="py-5 text-pColor">Shipping</p>
                 <div className="space-y-2 border-b border-border border-opacity-5 pb-5">

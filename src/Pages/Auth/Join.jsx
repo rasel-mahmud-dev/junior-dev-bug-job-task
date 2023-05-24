@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {useForm} from "react-hook-form";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Registration from "../../Components/Registration";
 import Login from "../../Components/Login";
 import {useGlobalCtx} from "../../Contexts/GlobalProvider";
 import axios from "axios";
 import {apis} from "../../apis/axios";
+import {toast} from "react-toastify";
+import errorMessage from "../../Utils/errorMessage";
 
 const Join = () => {
 
@@ -23,6 +25,7 @@ const Join = () => {
     const [avatar, setAvatar] = useState(null)
 
     const {form} = useParams()
+    const navigate = useNavigate()
 
     async function handleFormSubmit(formData) {
         let url = "/login"
@@ -48,9 +51,14 @@ const Join = () => {
             if (status === 201) {
                 localStorage.setItem("token", data.token)
                 setAuth(data.auth)
+
+                // after successfully login or registration redirect to homepage
+                navigate("/")
             }
         } catch (ex) {
             // handle api error
+
+            toast.error(errorMessage(ex))
         }
     }
 
