@@ -60,7 +60,7 @@ const useGlobal = () => {
         setPaymentErrorMessage("")
 
         try {
-            let {data, status} = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/bkash/createPayment`, {
+            let {data, status} = await apis.post(`${process.env.REACT_APP_SERVER_URL}/api/bkash/createPayment`, {
                 ...body,
                 totalPrice
             });
