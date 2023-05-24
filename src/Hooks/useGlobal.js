@@ -43,6 +43,10 @@ const useGlobal = () => {
     function handleLogin(auth) {
         setAuth(auth)
         setAuthLoaded(true)
+        if(!auth){
+            // clear current user cart items for
+            setProductState({carts: []})
+        }
     }
 
     const toggleModal = () => setOpen(!open);

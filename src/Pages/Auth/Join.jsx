@@ -13,35 +13,38 @@ const Join = () => {
 
     const {handleLogin} = useGlobalCtx()
 
-    const {register, handleSubmit, formState, setValue} = useForm({
+    const {register, handleSubmit, watch} = useForm({
         defaultValues: {
             firstName: "", // for registration
             lastName: "", // for registration
             email: "test@gmail.com",
             password: "123",
+            avatar: "",
         }
     })
-    const [avatar, setAvatar] = useState(null)
+
 
     const {form} = useParams()
     const navigate = useNavigate()
 
+    const avatar = watch("avatar")
+
     async function handleFormSubmit(formData) {
         let url = "/login"
 
-        let payload = formData;
+        let payload = {};
 
 
         if(form === "new"){
             url = "/register"
-            payload = new FormData()
-            payload.append("firstName", formData.firstName)
-            payload.append("lastName", formData.lastName)
-            payload.append("email", formData.email)
-            payload.append("password", formData.password)
-            if(avatar){
-                payload.append("avatar", avatar, "avatar")
-            }
+            payload["firstName"] =  formData.firstName
+            payload["lastName"] =  formData.lastName
+            payload["email"] =  formData.email
+            payload["password"] =  formData.password
+            payload["avatar"] =  formData.avatar
+        } else {
+            payload["email"] =  formData.email
+            payload["password"] =  formData.password
         }
 
 
@@ -66,7 +69,7 @@ const Join = () => {
         <form onSubmit={handleSubmit(handleFormSubmit)} className="max-w-xl mx-auto shadow-2xl rounded-xl p-6 my-20">
 
             {form === "new"
-                ? <Registration register={register} onChangeImage={(blob)=>setAvatar(blob)}/>
+                ? <Registration register={register} avatar={avatar}/>
                 : <Login register={register}/>
             }
 

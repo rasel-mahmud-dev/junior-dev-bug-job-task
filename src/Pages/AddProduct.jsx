@@ -3,23 +3,18 @@ import {useForm} from "react-hook-form";
 import {Link, useNavigate, useParams} from "react-router-dom";
 
 
-
 import {toast} from "react-toastify";
 
 import {Label} from "../Features/Checkout/Components/Handler";
 import Input from "../Components/Share/Input";
 import Btn from "../Components/Share/Btn";
 import TextArea from "../Components/Share/TextArea";
-import {useGlobalCtx} from "../Contexts/GlobalProvider";
 import errorMessage from "../Utils/errorMessage";
 import {apis} from "../apis/axios";
 
 const AddProduct = () => {
 
-
-    const {setAuth} = useGlobalCtx()
-
-    const {register, handleSubmit, formState,  watch, setValue} = useForm({
+    const {register, handleSubmit,  watch} = useForm({
         defaultValues: {
             title: "",
             description: "",
@@ -31,9 +26,6 @@ const AddProduct = () => {
 
     const thumb = watch("thumb", true)
 
-
-
-    const {form} = useParams()
     const navigate = useNavigate()
 
     async function handleFormSubmit(formData) {
@@ -49,7 +41,7 @@ const AddProduct = () => {
 
             if (status === 201) {
                 // after successfully add product redirect to homepage
-                // navigate("/")
+                navigate("/")
             }
         } catch (ex) {
             // handle api error

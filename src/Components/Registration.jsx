@@ -4,39 +4,7 @@ import Input from "./Share/Input";
 import Btn from "./Share/Btn";
 import {Link} from "react-router-dom";
 
-const Registration = ({register, onChangeImage}) => {
-
-    const [avatar, setAvatar] = useState({blob: "", base64: ""})
-
-
-    function handleChooseImage() {
-        const input = document.createElement("input")
-        input.type = "file"
-        input.setAttribute("accept", "image/*")
-        input.click()
-        input.onchange = handleChangeImage
-    }
-
-    function handleChangeImage(e) {
-        let file = e.target.files[0]
-        let reader = new FileReader()
-
-        reader.onload = function (e) {
-            let base = e.target.result
-            setAvatar({
-                base64: base,
-                blob: file
-            })
-            onChangeImage(file)
-        }
-
-        reader.onerror = function (e) {
-
-        }
-
-        reader.readAsDataURL(file)
-    }
-
+const Registration = ({register, avatar}) => {
     return (
         <div>
 
@@ -69,12 +37,18 @@ const Registration = ({register, onChangeImage}) => {
             </div>
 
             <div className="mt-6">
-                <label className="text-base text-black" htmlFor="">Avatar</label>
-                <div onClick={handleChooseImage}
-                        className={`  mt-1 ${avatar?.base64 ? "!bg-transparent !shadow-xs" : ""}`}
-                        >
-                    <img className="w-32 h-32 object-contain rounded-full ring ring-primary" src={avatar?.base64} alt="" />
+                <label className="text-base text-black" htmlFor="">Avatar Link</label>
+
+                <div className="space-y-2 relative mt-2">
+                    <Input placeholder="Avatar image link" className=""  register={{ ...register('avatar') }} />
                 </div>
+
+                {avatar &&  <div
+                    className={`  mt-2`}
+                >
+                    <img className="w-20 h-20 rounded-full object-cover " src={avatar} alt="" />
+                </div>
+                }
             </div>
 
 

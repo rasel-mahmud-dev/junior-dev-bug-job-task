@@ -79,7 +79,7 @@ export default function TopHeader() {
 
                 <div className="relative" onMouseLeave={()=>seOpenAuthDropdown(false)}>
                     {auth ? (
-                        <img   onMouseOver={()=>seOpenAuthDropdown(true)} className="w-9 h-9 rounded-full object-contain" src={auth.avatar} alt=""/>
+                        <img onMouseOver={()=>seOpenAuthDropdown(true)} className="w-9 h-9 rounded-full object-cover" src={auth.avatar} alt=""/>
                     ) : (
                         <Link to="/join/login">
                             <div className="bg-[#FBE697] w-10 h-10 flex items-center justify-center rounded-full">
@@ -88,7 +88,7 @@ export default function TopHeader() {
 
                         </Link>)}
 
-                    {auth && isOpenAuthDropdown && <AuthDropdown onMouseLeave={()=>seOpenAuthDropdown(false)} /> }
+                    {auth && isOpenAuthDropdown && <AuthDropdown auth={auth}  onMouseLeave={()=>seOpenAuthDropdown(false)} /> }
 
                 </div>
             </div>
