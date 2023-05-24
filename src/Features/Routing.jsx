@@ -5,6 +5,7 @@ import Join from "../Pages/Auth/Join";
 import HomePage from "../Pages/HomePage";
 import AddProduct from "../Pages/AddProduct";
 import PrivateRoute from "../Middleware/PrivateRoute";
+import Orders from "../Pages/Orders";
 
 export default function Routing() {
     return (
@@ -14,6 +15,7 @@ export default function Routing() {
             <Route path="/checkout/:productId" element={<PrivateRoute><CheckoutPage/></PrivateRoute>}/>
             <Route path="/checkout" element={<PrivateRoute><CheckoutPage/></PrivateRoute>}/>
             <Route path="/join/:form" element={<Join/>}/>
+            <Route path="/orders" element={<PrivateRoute><Orders/></PrivateRoute>}/>
         </Routes>
     );
 }

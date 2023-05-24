@@ -7,8 +7,10 @@ import {useParams} from "react-router-dom";
 import {apis} from "../../../apis/axios";
 
 
+
 export default function Order() {
-    const {open, totalPrice, setTotalPrice, productState: {carts = []}} = useGlobalCtx();
+
+    const {open, totalPrice, setTotalPrice, setProductState, productState: {carts = []}} = useGlobalCtx();
 
     const [singleProduct, setSingleProduct] = useState(null)
 
@@ -25,6 +27,9 @@ export default function Order() {
                 if (status === 200) {
                     setSubTotalPrice(data.price)
                     setSingleProduct(data)
+                    setProductState({
+                        productsForOrder: [{productId: data._id, price: data.price, title: data.title, thumb: data.thumb}]
+                    })
                 }
             })
         } else {
@@ -34,6 +39,14 @@ export default function Order() {
                 0
             );
             setSubTotalPrice(total)
+            setProductState({
+                productsForOrder: carts.map(ct=>({
+                    title: ct.title,
+                    price: ct.price,
+                    thumb: ct.thumb,
+                    productId: ct.productId
+                }))
+            })
         }
 
     }, [productId, carts])
@@ -57,6 +70,7 @@ export default function Order() {
                     {productId ? (
                         singleProduct && (
                             <> <TbRow key={singleProduct._id}
+                                      image={singleProduct.thumb}
                                       label={singleProduct.title}>৳ {singleProduct.price} TK </TbRow>
                                 <TbRow label="Subtotal"><p className="text-black">৳ {singleProduct.price}TK </p>
                                 </TbRow></>
@@ -64,6 +78,7 @@ export default function Order() {
                     ) : (
                         <>
                             {carts.map((product) => <TbRow key={product._id}
+                                                           image={product.thumb}
                                                            label={product.title}>৳ {product.price} TK </TbRow>)}
                             <TbRow label="Subtotal"><p className="text-black">৳ {subTotalPrice}TK </p></TbRow>
                         </>

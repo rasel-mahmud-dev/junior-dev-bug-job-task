@@ -23,7 +23,8 @@ const useGlobal = () => {
         }
     }, {
         products: [],
-        carts: []
+        carts: [],
+        productsForOrder: []
     })
 
     // auth load
@@ -51,39 +52,6 @@ const useGlobal = () => {
 
     const toggleModal = () => setOpen(!open);
 
-    const getPayment = async (body, pathname) => {
-
-
-        if (!auth) return toast.error("To create order and payment you need to login")
-
-        // clear error message when press payment button
-        setPaymentErrorMessage("")
-
-        try {
-            let {data, status} = await apis.post(`${process.env.REACT_APP_SERVER_URL}/api/bkash/createPayment`, {
-                ...body,
-                totalPrice
-            });
-
-            if (status !== 200) return setPaymentErrorMessage("Payment fail, Please try again.")
-
-
-            // if successfully create payment agreement then redirect server to create agreement Execute
-            let agreementExecuteLink = `${process.env.REACT_APP_SERVER_URL}/api/bkash/execute?email=${body.email}&totalPrice=${totalPrice}&paymentID=${data.paymentID}`
-
-            let clientRedirect = '&clientRedirect=' + pathname
-            agreementExecuteLink += clientRedirect;
-
-            // hit backend server to Execute Agreement.
-            window.location.href = agreementExecuteLink
-
-
-        } catch (ex) {
-
-            // handle show error message to client to better user experience.
-            setPaymentErrorMessage(errorMessage(ex))
-        }
-    }
 
 
     return {
@@ -96,7 +64,6 @@ const useGlobal = () => {
         handleLogin,
         productState,
         setProductState,
-        getPayment,
         totalPrice,
         paymentErrorMessage,
         setPaymentErrorMessage,

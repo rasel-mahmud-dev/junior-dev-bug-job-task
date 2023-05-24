@@ -56,8 +56,8 @@ const CartPopup = ({setOpenCart, carts = [], setProductState}) => {
                     </div>
                 )}
 
-                {carts.map(cart=>(
-                    <tr>
+                {carts.map((cart, index)=>(
+                    <tr key={index}>
                         <td className="py-4">
                             <div className="w-12 h-12">
                                 <img className="object-contain" src={cart.thumb} alt=""/>

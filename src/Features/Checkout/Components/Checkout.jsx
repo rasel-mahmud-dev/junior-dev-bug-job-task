@@ -4,16 +4,62 @@ import {useGlobalCtx} from '../../../Contexts/GlobalProvider';
 import Contact from './Contact'
 import Order from './Order'
 import {useLocation} from "react-router-dom";
+import {toast} from "react-toastify";
+import {apis} from "../../../apis/axios";
+import errorMessage from "../../../Utils/errorMessage";
 
 
 function Checkout() {
-    const {register, handleSubmit} = useForm();
-    const {getPayment, paymentErrorMessage} = useGlobalCtx();
+    const {register, handleSubmit} = useForm({
+        defaultValues: {
+            phone: "01770618575",
+            firstName: "Test user"
+        }
+    });
+    const {productState, totalPrice, auth, setPaymentErrorMessage, paymentErrorMessage} = useGlobalCtx();
 
     const location = useLocation()
 
 
-    const onSubmit = (data) => getPayment(data, location.pathname);
+    const onSubmit = async (userInput) => {
+
+            if (!auth) return toast.error("To create order and payment you need to login")
+
+            // clear error message when press payment button
+            setPaymentErrorMessage("")
+
+            try {
+
+                // create order and payment unpaid and store paymentID
+                let {data, status} = await apis.post(`${process.env.REACT_APP_SERVER_URL}/api/bkash/createPayment`, {
+                    ...userInput,
+                    totalPrice,
+                    items: productState.productsForOrder,
+                    redirectClient: location.pathname
+                });
+
+                if (status !== 201) return setPaymentErrorMessage("Payment fail, Please try again.")
+
+                window.location.href = data.bkashURL
+
+                // if successfully create payment agreement then redirect server to create agreement Execute
+                // let agreementExecuteLink = `${process.env.REACT_APP_SERVER_URL}/api/bkash/execute?email=${body.email}&totalPrice=${totalPrice}&paymentID=${data.paymentID}`
+                //
+                // let clientRedirect = '&clientRedirect=' + pathname
+                // agreementExecuteLink += clientRedirect;
+
+                // hit backend server to Execute Agreement.
+                // window.location.href = agreementExecuteLink
+
+
+            } catch (ex) {
+
+                // handle show error message to client to better user experience.
+                setPaymentErrorMessage(errorMessage(ex))
+            }
+
+
+    };
 
 
     return (

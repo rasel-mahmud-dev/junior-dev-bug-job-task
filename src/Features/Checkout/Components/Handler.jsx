@@ -13,13 +13,17 @@ function Label({ title }) {
 
 function TbRow({
     label,
+    image,
     children,
     key,
 }) {
     return (
         <tr className="border-b text-base text-pColor" key={key}>
             <td className="pt-5 pb-2">
-                <p className="capitalize font-normal">{label}</p>
+                <div className="flex items-center gap-x-2">
+                    {image && <img className="w-12 h-12 object-contain" src={image} alt=""/> }
+                    <p className="capitalize font-normal">{label}</p>
+                </div>
             </td>
             <td className="pt-5 pb-2 text-right font-medium">{children}</td>
         </tr>

@@ -5,6 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Product from "../Components/Product";
 import {toast} from "react-toastify";
 import errorMessage from "../Utils/errorMessage";
+import {MoonLoader} from "react-spinners";
 
 const HomePage = () => {
 
@@ -63,6 +64,7 @@ const HomePage = () => {
                 )}
             </div>
 
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 pb-20">
                 {productState?.products?.map(product => (
                     <Product
@@ -73,6 +75,15 @@ const HomePage = () => {
                     />
                 ))}
             </div>
+
+            {productState?.products && productState?.products.length === 0 && (
+                <div>
+                    <div className="pb-40 w-full flex justify-center  items-center flex-col">
+                        <MoonLoader/>
+                        <h4 className="text-sm font-semibold mt-2">Product Loading...</h4>
+                    </div>
+                </div>
+            )}
 
         </div>
     );
